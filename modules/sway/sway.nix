@@ -1,6 +1,12 @@
 { config, pkgs, lib, ... }:
 
 {
+  home.file.".XCompose".text = ''
+    include "%L"
+    <dead_acute> <C> : "Ç" Ccedilla
+    <dead_acute> <c> : "ç" ccedilla
+  '';
+
   wayland.windowManager.sway = {
     enable = true;
     package = pkgs.swayfx;
@@ -56,10 +62,13 @@
         { command = "noctalia-shell"; }
       ];
 
+
       input = {
         "type:keyboard" = {
+          # xkb_layout = "custom";
           xkb_layout = "us";
           xkb_variant = "intl";
+          xkb_options = "caps:escape"; # remap caps to escape
         };
       };
 
@@ -82,6 +91,7 @@
         "${mod}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}"; # open terminal
         "${mod}+Shift+s" = "exec grim -g \"$(slurp)\" - | wl-copy"; # screenshot
         "Mod1+Shift+q" = "kill"; # kill focused app
+        "Mod1+l" = "exec qs -c noctalia-shell ipc call lockScreen lock"; # lock screen
 
         # function keys
         "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +5%";
@@ -112,8 +122,6 @@
   home.packages = with pkgs; [
     grim
     slurp
-    swaylock
-    swayidle
     playerctl
     pulseaudio
     brightnessctl

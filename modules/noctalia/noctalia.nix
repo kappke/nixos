@@ -6,7 +6,7 @@
   ];
 
   home.packages = with pkgs; [
-    quickshell
+    inputs.noctalia-qs.packages.${pkgs.system}.default
   ];
 
   # configure options

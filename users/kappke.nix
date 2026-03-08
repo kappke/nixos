@@ -58,8 +58,18 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    GTK_IM_MODULE = "simple";
+    GTK_IM_MODULE = "cedilla";
+    QT_IM_MODULE = "cedilla";
   };
+
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.local/bin/xdg-bin"
+    "$HOME/.cargo/bin"
+    "$HOME/.nix-profile/bin"
+    "$HOME/.nix-profile/sbin"
+    "$HOME/.config"
+  ];
 
   # User targeted configuration
   wayland.windowManager.sway = {
