@@ -48,19 +48,30 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    slack
     spotify
     tableplus
     bruno
     discord
     ani-cli
+    (pkgs.slack.overrideAttrs (oldAttrs: {
+      installPhase = oldAttrs.installPhase + ''
+        wrapProgram $out/bin/slack \
+          --set NIXOS_OZONE_WL 0 \
+          --add-flags "--ozone-platform=x11"
+      '';
+    }))
   ];
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    NIXOS_OZONE_WL = "1";
     GTK_IM_MODULE = "cedilla";
     QT_IM_MODULE = "cedilla";
   };
+
+  home.file.".profile".text = ''
+    export XDG_DATA_DIRS=$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share
+  '';
 
   home.sessionPath = [
     "$HOME/.local/bin"

@@ -102,6 +102,8 @@ in
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
   programs.seahorse.enable = true;
+  services.flatpak.enable = true;
+  xdg.portal.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
