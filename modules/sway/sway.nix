@@ -14,10 +14,11 @@
 
     config = rec {
       modifier = "Mod4";
-      terminal = "ghostty";
+      terminal = "kitty";
 
       window = {
-        border = 2;
+        # border = 2;
+        border = 0;
         titlebar = false;
         hideEdgeBorders = "smart";
       };
@@ -54,7 +55,7 @@
       };
 
       floating.border = 1;
-      gaps.inner = 8;
+      # gaps.inner = 8;
 
       bars = [];
 
@@ -68,14 +69,14 @@
           # xkb_layout = "custom";
           xkb_layout = "us";
           xkb_variant = "intl";
-          xkb_options = "caps:escape"; # remap caps to escape
+          xkb_options = "caps:escape,escape:none"; # remap caps to escape
         };
       };
 
-      output = {
-        "HDMI-A-1" = { position = "1920,0"; };
-        "eDP-1" = { position = "0,0"; };
-      };
+      # output = {
+      #   "HDMI-A-1" = { position = "1920,0"; };
+      #   "eDP-1" = { position = "0,0"; };
+      # };
 
       keybindings = let
         mod = config.wayland.windowManager.sway.config.modifier;
@@ -91,7 +92,7 @@
         "${mod}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}"; # open terminal
         "${mod}+Shift+s" = "exec grim -g \"$(slurp)\" - | wl-copy"; # screenshot
         "Mod1+Shift+q" = "kill"; # kill focused app
-        "Mod1+l" = "exec qs -c noctalia-shell ipc call lockScreen lock"; # lock screen
+        "${mod}+l" = "noctalia-shell ipc call lockScreen lock"; # lock screen
 
         # function keys
         "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +5%";
@@ -111,7 +112,7 @@
       blur_xray disable
       blur_passes 2
       blur_radius 5
-    
+
       # Ghostty-specific rules
       for_window [app_id="com.mitchellh.ghostty"] {
         blur enable

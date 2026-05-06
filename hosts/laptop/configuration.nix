@@ -87,6 +87,8 @@ in
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.hostName = "kappke"; # Define your hostname.
   networking.networkmanager.enable = true;
+  networking.firewall.trustedInterfaces = [ "docker0" ];
+  networking.firewall.allowedTCPPorts = [ 8080 ];
 
   hardware.bluetooth.enable = true;
 
@@ -183,14 +185,14 @@ in
     zip
     unzip
     tree
-    htop
-    btop
-    fastfetch
-    github-cli
 
     # apps
-    kitty
-    ghostty
+    btop # process monitor
+    oxker # docker TUI
+    kitty # terminal emulator
+    ghostty # terminal emulator
+    fastfetch # sys info tool
+    github-cli
   ];
 
   fonts.packages = with pkgs; [
@@ -199,6 +201,9 @@ in
     roboto-slab
     roboto-mono
     roboto-serif
+    fira-code
+    fira-code-symbols
+    # nerdfonts
   ];
 
   system.stateVersion = "25.11"; # Did you read the comment?

@@ -1,59 +1,53 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
-  home.username = "kappke";
-  home.homeDirectory = "/home/kappke";
-
-  home.stateVersion = "25.11"; 
-
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = "Vinícius Kappke";
-        email = "vinikappke@gmail.com";
-        signingkey = "~/.ssh/id_ed25519.pub";
-      };
-
-      gpg = {
-        format = "ssh";
-        ssh.allowedSignersFile = "~/.ssh/allowed_signers";
-      };
-
-      commit.gpgsign = true;
-      push.autoSetupRemote = true;
-      init.defaultBranch = "master";
-    };
-  };
-
-  programs.ghostty = {
-    enable = true;
-    settings = {
-      background = "#1E1E1E";
-      background-opacity = 0.75;
-      background-blur-radius = 20;
-    };
-  };
-
   imports = [
-    ../modules/zsh/zsh.nix
+    ./common.nix
     ../modules/sway/sway.nix
-    ../modules/nvim/nvim.nix
-    ../modules/tmux/tmux.nix
     ../modules/thunar/thunar.nix
     ../modules/noctalia/noctalia.nix
     ../modules/zen-browser/zen-browser.nix
   ];
 
-  nixpkgs.config.allowUnfree = true;
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      window-padding-x = 0;
+      window-padding-y = 0;
+      background = "#0a0a0a";
+      foreground = "#e6e8ee";
+    };
+  };
+
+  programs.kitty = {
+    enable = true;
+    settings = {
+      font_size = 12.0;
+      font_family = "Fira Code";
+      background = "#0a0a0a";
+      foreground = "#e6e8ee";
+      cursor_trail = 1;
+      enable_audio_bell = false;
+    };
+  };
 
   home.packages = with pkgs; [
     spotify
-    tableplus
-    bruno
     discord
     ani-cli
-    (pkgs.slack.overrideAttrs (oldAttrs: {
+    prismlauncher
+
+    # work related 
+    bruno
+    opencode
+    tableplus
+    (mongodb-compass.overrideAttrs (oldAttrs: {
+      installPhase = oldAttrs.installPhase + ''
+        wrapProgram $out/bin/mongodb-compass \
+          --add-flags "--password-store=gnome-libsecret --ignore-additional-command-line-flags"
+      '';
+    }))
+    (slack.overrideAttrs (oldAttrs: {
       installPhase = oldAttrs.installPhase + ''
         wrapProgram $out/bin/slack \
           --set NIXOS_OZONE_WL 0 \
@@ -63,7 +57,6 @@
   ];
 
   home.sessionVariables = {
-    EDITOR = "nvim";
     NIXOS_OZONE_WL = "1";
     GTK_IM_MODULE = "cedilla";
     QT_IM_MODULE = "cedilla";
@@ -72,15 +65,6 @@
   home.file.".profile".text = ''
     export XDG_DATA_DIRS=$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share
   '';
-
-  home.sessionPath = [
-    "$HOME/.local/bin"
-    "$HOME/.local/bin/xdg-bin"
-    "$HOME/.cargo/bin"
-    "$HOME/.nix-profile/bin"
-    "$HOME/.nix-profile/sbin"
-    "$HOME/.config"
-  ];
 
   # User targeted configuration
   wayland.windowManager.sway = {
@@ -121,6 +105,43 @@
     '';
   };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  services.kanshi = {
+    enable = true;
+    profiles = {
+      undocked = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+            mode = "1920x1080@60.008Hz";
+          }
+        ];
+      };
+      office = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+            # mode = "1920x1080@60.008Hz";
+            status = "disable";
+          }
+          {
+            criteria = "Samsung Electric Company LF24T35 HX5XA07221";
+            mode = "1920x1080@74.973Hz";
+          }
+        ];
+      };
+      home = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+            mode = "1920x1080@60.008Hz";
+            # status = "disable";
+          }
+          {
+            criteria = "LG Electronics LG ULTRAWIDE 0x01010101";
+            mode = "2560x1080@74.991Hz";
+          }
+        ];
+      };
+    };
+  };
 }
