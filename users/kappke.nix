@@ -36,6 +36,9 @@
     discord
     ani-cli
     prismlauncher
+    ngrok
+    live-server
+    mosh
 
     # work related 
     bruno
