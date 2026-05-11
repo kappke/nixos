@@ -51,20 +51,17 @@
           "8.8.8.8"
         ];
         bind_hosts = [ "0.0.0.0" ];
-        rewrites = [
-          {
-            domain = "dash.server";
-            answer = "192.168.100.73";
-          }
-          {
-            domain = "adguard.server";
-            answer = "192.168.100.73";
-          }
-        ];
       };
       filtering = {
         enabled = true;
         interval = 24;
+        rewrites = [
+          {
+            enabled = true;
+            domain = "*.server";
+            answer = "192.168.100.73";
+          }
+        ];
       };
       filters = [
         {
@@ -166,15 +163,31 @@
     enable = true;
     recommendedProxySettings = true;
     
+    # add subdomain rewrites for the adguard, homepage and filebrowser services like adguard.server, homepage.server and filebrowser.server
     virtualHosts = {
-      "filebrowser.server" = {
-        locations."/".proxyPass = "http://127.0.0.1:8080";
-      };
-      "dash.server" = {
-        locations."/".proxyPass = "http://127.0.0.1:8082";
-      };
       "adguard.server" = {
-        locations."/".proxyPass = "http://127.0.0.1:3000";
+        root = "/var/www/adguard";
+        locations = {
+          "/" = {
+            proxyPass = "http://localhost:3000";
+          };
+        };
+      };
+      "homepage.server" = {
+        root = "/var/www/homepage";
+        locations = {
+          "/" = {
+            proxyPass = "http://localhost:8082";
+          };
+        };
+      };
+      "filebrowser.server" = {
+        root = "/var/www/filebrowser";
+        locations = {
+          "/" = {
+            proxyPass = "http://localhost:8080";
+          };
+        };
       };
     };
   };

@@ -35,12 +35,14 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    gemini-cli
     wget
     zip
     unzip
     tree
     btop
+    ethtool
+    fastfetch
+    speedtest-cli
   ];
 
   home.sessionVariables = {

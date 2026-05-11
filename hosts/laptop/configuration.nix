@@ -195,7 +195,6 @@ in
     oxker # docker TUI
     kitty # terminal emulator
     ghostty # terminal emulator
-    fastfetch # sys info tool
     github-cli
   ];
 

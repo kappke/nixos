@@ -43,6 +43,7 @@
     # work related 
     bruno
     opencode
+    gemini-cli
     tableplus
     (mongodb-compass.overrideAttrs (oldAttrs: {
       installPhase = oldAttrs.installPhase + ''
