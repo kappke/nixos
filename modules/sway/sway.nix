@@ -14,7 +14,7 @@
 
     config = rec {
       modifier = "Mod4";
-      terminal = "kitty";
+      terminal = "ghostty";
 
       window = {
         # border = 2;
@@ -92,7 +92,7 @@
         "${mod}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}"; # open terminal
         "${mod}+Shift+s" = "exec grim -g \"$(slurp)\" - | wl-copy"; # screenshot
         "Mod1+Shift+q" = "kill"; # kill focused app
-        "${mod}+l" = "noctalia-shell ipc call lockScreen lock"; # lock screen
+        "Mod1+l" = "noctalia-shell ipc call lockScreen lock"; # lock screen
 
         # function keys
         "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +5%";

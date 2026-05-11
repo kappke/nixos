@@ -107,6 +107,10 @@ in
   services.flatpak.enable = true;
   xdg.portal.enable = true;
 
+  services.tailscale = {
+    enable = true;
+  };
+
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
 
