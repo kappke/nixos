@@ -61,12 +61,16 @@
 
   # Enable Wake-on-LAN for your specific ethernet interface
   # Find your interface name by running `ip link` (usually enp... or eth...)
-  networking.interfaces.enp3s0.wakeOnLan.enable = true; 
+  networking.interfaces.enp5s0.wakeOnLan.enable = true; 
 
   # Standard firewall settings
   networking.firewall = {
     enable = true;
-    allowedUDPPorts = [ 9 ]; # Standard port for Wake-on-LAN magic packets
+    allowedTCPPorts = [ 47984 47989 47990 48010 ];
+    allowedUDPPorts = [
+      9
+      { from = 47998; to = 48000 }
+    ]; # Standard port for Wake-on-LAN magic packets
   };
 
   # 5. Gaming & Optimization
@@ -166,7 +170,7 @@
   # Replace UUID with the actual one from `blkid`
   fileSystems."/mnt/storage" = {
     device = "/dev/disk/by-uuid/4A32A1DB32A1CBEF";
-    fsType = "ext4";
+    fsType = "ntfs";
   };
 
   # 9. System Packages
