@@ -36,6 +36,7 @@
     discord
     ani-cli
     prismlauncher
+    moonlight-qt
     ngrok
     live-server
     mosh
@@ -62,6 +63,7 @@
 
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    WLR_NO_HARDWARE_CURSORS = "1"; # Fix for invisible cursor on NVIDIA Wayland
     GTK_IM_MODULE = "cedilla";
     QT_IM_MODULE = "cedilla";
   };
@@ -143,6 +145,14 @@
           {
             criteria = "LG Electronics LG ULTRAWIDE 0x01010101";
             mode = "2560x1080@74.991Hz";
+          }
+        ];
+      };
+      headless = {
+        outputs = [
+          {
+            criteria = "HDMI-A-1";
+            mode = "1920x1080@60Hz";
           }
         ];
       };
