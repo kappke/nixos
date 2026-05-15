@@ -93,10 +93,10 @@
   };
   console.keyMap = "br-abnt2";
 
-  fileSystems."/mnt/storage" = {
-    device = "/dev/disk/by-uuid/4A32A1DB32A1CBEF";
-    fsType = "ntfs";
-  };
+  # fileSystems."/mnt/storage" = {
+  #   device = "/dev/disk/by-uuid/4A32A1DB32A1CBEF";
+  #   fsType = "ntfs";
+  # };
 
   # 9. System Packages
   environment.systemPackages = with pkgs; [
