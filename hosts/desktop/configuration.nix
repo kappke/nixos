@@ -27,33 +27,12 @@
     };
   };
 
-  # --- Networking ---
   networking.hostName = "gaming-node";
   networking.networkmanager.enable = true;
   networking.interfaces.enp5s0.wakeOnLan.enable = true; 
 
-  # --- NVIDIA Headless Fix ---
-  # Without a monitor, the GPU might not initialize a frame buffer.
-  # This forces a virtual 1080p display.
   services.xserver.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
-  # services.xserver.screenSection = ''
-  #   Option "Metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
-  #   Option "AllowIndirectGLXProtocol" "off"
-  #   Option "TripleBuffer" "on"
-  # '';
-  #
-  # services.xserver.config = ''
-  #   Section "Device"
-  #       Identifier     "Device0"
-  #       Driver         "nvidia"
-  #       VendorName     "NVIDIA Corporation"
-  #       # This allows the driver to work without a physical monitor
-  #       Option         "AllowEmptyInitialConfiguration" "true"
-  #       Option         "ConnectedMonitor" "DFP"
-  #       Option         "CustomEDID" "DFP:/etc/X11/edid.bin"
-  #   EndSection
-  # '';
 
   hardware.nvidia = {
     modesetting.enable = true;
@@ -66,30 +45,21 @@
   
   hardware.graphics = {
     enable = true;
-    # driSupport32Bit = true;
-    enable32Bit = true; # Required for Steam
+    enable32Bit = true; 
   };
 
-  # --- Gaming Stack ---
-  programs.steam.enable = true;
-  # services.sunshine = {
-  #   enable = true;
-  #   autoStart = true;
-  #   capSysAdmin = true;
-  #   openFirewall = true;
-  #   settings = {
-  #     video_encoder = "nvenc";
-  #   };
-  # };
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
 
-  # --- User Configuration ---
+  programs.gamemode.enable = true;
+
+  programs.zsh.enable = true;
   users.users.kappke = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "render" ];
-    # Add your laptop's public key here to allow remote 'nixos-rebuild'
-    # openssh.authorizedKeys.keys = [
-    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI..." 
-    # ];
   };
 
   # Automatic login is required for Sunshine to capture the desktop
@@ -97,17 +67,38 @@
     enable = true;
     user = "kappke";
   };
-  # services.xserver.displayManager.lightdm.enable = true;
-  # services.xserver.windowManager.openbox.enable = true;
+
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.displayManager.gdm.wayland = false;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # services.udev.extraRules = ''
-  #   KERNEL=="uinput", GROUP="video", MODE="0660", OPTIONS+="static_node=uinput"
-  # '';
+  # Keyring for password management
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
 
+  time.timeZone = "America/Sao_Paulo";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "pt_BR.UTF-8";
+    LC_IDENTIFICATION = "pt_BR.UTF-8";
+    LC_MEASUREMENT = "pt_BR.UTF-8";
+    LC_MONETARY = "pt_BR.UTF-8";
+    LC_NAME = "pt_BR.UTF-8";
+    LC_NUMERIC = "pt_BR.UTF-8";
+    LC_PAPER = "pt_BR.UTF-8";
+    LC_TELEPHONE = "pt_BR.UTF-8";
+    LC_TIME = "pt_BR.UTF-8";
+    LC_CTYPE = "pt_BR.UTF-8";
+  };
+  console.keyMap = "br-abnt2";
+
+  fileSystems."/mnt/storage" = {
+    device = "/dev/disk/by-uuid/4A32A1DB32A1CBEF";
+    fsType = "ntfs";
+  };
+
+  # 9. System Packages
   environment.systemPackages = with pkgs; [
     heroic
     mangohud
