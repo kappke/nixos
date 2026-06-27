@@ -12,8 +12,8 @@
   programs.ghostty = {
     enable = true;
     settings = {
-      window-padding-x = 0;
-      window-padding-y = 0;
+      window-padding-x = 8;
+      window-padding-y = 8;
       background = "#0a0a0a";
       foreground = "#e6e8ee";
     };
@@ -36,16 +36,17 @@
     discord
     ani-cli
     prismlauncher
-    moonlight-qt
     ngrok
     live-server
     mosh
 
     # work related 
     bruno
+    posting
     opencode
     gemini-cli
     tableplus
+    redisinsight
     (mongodb-compass.overrideAttrs (oldAttrs: {
       installPhase = oldAttrs.installPhase + ''
         wrapProgram $out/bin/mongodb-compass \
@@ -126,11 +127,22 @@
         outputs = [
           {
             criteria = "eDP-1";
-            # mode = "1920x1080@60.008Hz";
             status = "disable";
           }
           {
             criteria = "Samsung Electric Company LF24T35 HX5XA07221";
+            mode = "1920x1080@74.973Hz";
+          }
+        ];
+      };
+      office_alternate = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+          {
+            criteria = "Samsung Electric Company LF24T35 HX5X609064";
             mode = "1920x1080@74.973Hz";
           }
         ];
@@ -140,19 +152,10 @@
           {
             criteria = "eDP-1";
             mode = "1920x1080@60.008Hz";
-            # status = "disable";
           }
           {
             criteria = "LG Electronics LG ULTRAWIDE 0x01010101";
             mode = "2560x1080@74.991Hz";
-          }
-        ];
-      };
-      headless = {
-        outputs = [
-          {
-            criteria = "HDMI-A-1";
-            mode = "1920x1080@60Hz";
           }
         ];
       };
