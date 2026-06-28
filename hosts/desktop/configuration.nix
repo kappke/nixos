@@ -2,47 +2,7 @@
 
 { config, inputs, pkgs, ... }:
 
-let
-  wallpaper = pkgs.copyPathToStore ./wallpapers/wallhaven-6llkol.png;
-
-  gtkgreetCSS = pkgs.writeText "gtkgreet.css" ''
-    window {
-      background-color: transparent;
-    }
-  '';
-
-  swayConfig = pkgs.writeText "greetd-sway-config" ''
-    output * bg ${wallpaper} fill
-
-    exec "${pkgs.gtkgreet}/bin/gtkgreet -l -s ${gtkgreetCSS}; swaymsg exit"
-
-    bindsym Mod4+shift+e exec swaynag \
-      -t warning \
-      -m 'What do you want to do?' \
-      -b 'Poweroff' 'systemctl poweroff' \
-      -b 'Reboot' 'systemctl reboot'
-  '';
-in
 {
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
-      };
-      initial_session = {
-        command = "sway";
-        user = "kappke";
-      };
-    };
-  };
-
-  environment.etc."greetd/environments".text = ''
-    sway
-    bash
-  '';
-
-
   imports =
     [ 
       ./hardware-configuration.nix
@@ -76,6 +36,7 @@ in
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
+      "nvidia-drm.modeset=1"
     ];
 
     kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" "uinput" ];
@@ -112,6 +73,15 @@ in
     powerManagement.enable = false;
     open = false; 
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+
+    displayManager.sddm.enable = true;
+
+    windowManager.i3.enable = true;
   };
 
   services.gvfs.enable = true;
@@ -153,8 +123,9 @@ in
 
   # Configure keymap in X11
   services.xserver.xkb = {
-    layout = "br";
-    variant = "";
+    layout = "us";
+    variant = "intl";
+    options = "caps:escape,escape:none"; # remap caps to escape
   };
 
   # Configure console keymap
@@ -183,7 +154,7 @@ in
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     users = {
-      "kappke" = import ../../users/kappke.nix;
+      "kappke" = import ../../users/kappke-desktop.nix;
     };
   };
 
