@@ -13,7 +13,7 @@
 
     # Pin to the classic settings backend; HM's lua codegen for hyprland 0.55
     # is still buggy as of mid-2026. Revisit once that's stable.
-    configType = "hyprlang";
+    # configType = "hyprlang";
 
     settings = {
       "$mod" = "SUPER";
