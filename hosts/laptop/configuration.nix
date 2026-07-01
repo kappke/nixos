@@ -34,6 +34,7 @@ in
   };
 
   environment.etc."greetd/environments".text = ''
+    Hyprland
     sway
     bash
   '';
@@ -149,6 +150,7 @@ in
   programs.light.enable = true;
   programs.zsh.enable = true;
   programs.steam.enable = true;
+  programs.hyprland.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.kappke = {

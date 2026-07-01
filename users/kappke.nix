@@ -3,7 +3,8 @@
 {
   imports = [
     ./common.nix
-    ../modules/sway/sway.nix
+    ../modules/hyprland/hyprland.nix
+    # ../modules/sway/sway.nix
     ../modules/thunar/thunar.nix
     ../modules/noctalia/noctalia.nix
     ../modules/zen-browser/zen-browser.nix
@@ -74,42 +75,75 @@
   '';
 
   # User targeted configuration
-  wayland.windowManager.sway = {
-    config = {
-      startup = [
-        { command = "swaymsg 'workspace 1; workspace 4; workspace 5; workspace 1'"; }
-        { command = "zen"; }
-        { command = "slack"; }
-        { command = "spotify"; }
-      ];
+  # wayland.windowManager.sway = {
+  #   config = {
+  #     startup = [
+  #       { command = "swaymsg 'workspace 1; workspace 4; workspace 5; workspace 1'"; }
+  #       { command = "zen"; }
+  #       { command = "slack"; }
+  #       { command = "spotify"; }
+  #     ];
+  #
+  #     workspaceOutputAssign = [
+  #       { workspace = "1"; output = "HDMI-A-1"; }
+  #       { workspace = "2"; output = "HDMI-A-1"; }
+  #       { workspace = "3"; output = "HDMI-A-1"; }
+  #       { workspace = "4"; output = "eDP-1"; }
+  #       { workspace = "5"; output = "eDP-1"; }
+  #       { workspace = "6"; output = "eDP-1"; } 
+  #     ];
+  #
+  #     assigns = {
+  #       "1" =  [{ app_id = "^Zen$"; }];
+  #       "4" =  [{ app_id = "^Slack$"; }];
+  #       "5" =  [{ class = "^Spotify$"; }];
+  #     };
+  #   };
+  #
+  #   extraConfig = ''
+  #     set $mod Mod4
+  #
+  #     bindsym $mod+q workspace number 4
+  #     bindsym $mod+w workspace number 5
+  #     bindsym $mod+e workspace number 6
+  #     
+  #     bindsym $mod+Shift+q move container to workspace number 4
+  #     bindsym $mod+Shift+w move container to workspace number 5
+  #     bindsym $mod+Shift+e move container to workspace number 6
+  #   '';
+  # };
+  wayland.windowManager.hyprland.settings = {
+    exec-once = [
+      # forces workspaces to initialize on both outputs, same trick as your sway startup line
+      "sh -c 'hyprctl dispatch workspace 1 && hyprctl dispatch workspace 4 && hyprctl dispatch workspace 5 && hyprctl dispatch workspace 1'"
+      "zen"
+      "slack"
+      "spotify"
+    ];
 
-      workspaceOutputAssign = [
-        { workspace = "1"; output = "HDMI-A-1"; }
-        { workspace = "2"; output = "HDMI-A-1"; }
-        { workspace = "3"; output = "HDMI-A-1"; }
-        { workspace = "4"; output = "eDP-1"; }
-        { workspace = "5"; output = "eDP-1"; }
-        { workspace = "6"; output = "eDP-1"; } 
-      ];
+    workspace = [
+      "1, monitor:HDMI-A-1"
+      "2, monitor:HDMI-A-1"
+      "3, monitor:HDMI-A-1"
+      "4, monitor:eDP-1"
+      "5, monitor:eDP-1"
+      "6, monitor:eDP-1"
+    ];
 
-      assigns = {
-        "1" =  [{ app_id = "^Zen$"; }];
-        "4" =  [{ app_id = "^Slack$"; }];
-        "5" =  [{ class = "^Spotify$"; }];
-      };
-    };
+    windowrulev2 = [
+      "workspace 1 silent, class:^(zen)$"
+      "workspace 4 silent, class:^(Slack)$"
+      "workspace 5 silent, class:^(Spotify)$"
+    ];
 
-    extraConfig = ''
-      set $mod Mod4
-
-      bindsym $mod+q workspace number 4
-      bindsym $mod+w workspace number 5
-      bindsym $mod+e workspace number 6
-      
-      bindsym $mod+Shift+q move container to workspace number 4
-      bindsym $mod+Shift+w move container to workspace number 5
-      bindsym $mod+Shift+e move container to workspace number 6
-    '';
+    bind = [
+      "$mod, Q, workspace, 4"
+      "$mod, W, workspace, 5"
+      "$mod, E, workspace, 6"
+      "$mod SHIFT, Q, movetoworkspace, 4"
+      "$mod SHIFT, W, movetoworkspace, 5"
+      "$mod SHIFT, E, movetoworkspace, 6"
+    ];
   };
 
   services.kanshi = {
