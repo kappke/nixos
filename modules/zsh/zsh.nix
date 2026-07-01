@@ -25,6 +25,9 @@
 
     initContent = ''
       eval "$(direnv hook zsh)"
+      if [ -f "$HOME/.local/bin/code" ]; then
+        source "$HOME/.local/bin/code"
+      fi
     '';
   };
 

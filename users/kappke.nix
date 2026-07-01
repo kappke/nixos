@@ -43,8 +43,8 @@
     # work related 
     bruno
     posting
+    lazygit
     opencode
-    gemini-cli
     tableplus
     redisinsight
     (mongodb-compass.overrideAttrs (oldAttrs: {
