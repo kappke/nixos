@@ -8,11 +8,11 @@
     syntaxHighlighting.enable = true;
     
     shellAliases = {
-      ll = "ls -l";
-      update = "sudo nixos-rebuild switch --flake /etc/nixos#$(hostname)";
-      ghostty = "GTK_IM_MODULE=simple ghostty";
+      ls = "eza --color=always --icons";
+      cat = "bat --color=always";
       cd = "z";
       la = "lazy-click";
+      ghostty = "GTK_IM_MODULE=simple ghostty";
     };
     
     history.size = 10000;
@@ -38,6 +38,16 @@
 
   # better cd 
   programs.zoxide = {
+    enable = true;
+  };
+
+  # better ls
+  programs.eza = {
+    enable = true;
+  };
+
+  # better cat
+  programs.bat = {
     enable = true;
   };
 }

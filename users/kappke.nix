@@ -19,18 +19,6 @@
     };
   };
 
-  programs.kitty = {
-    enable = true;
-    settings = {
-      font_size = 12.0;
-      font_family = "Fira Code";
-      background = "#0a0a0a";
-      foreground = "#e6e8ee";
-      cursor_trail = 1;
-      enable_audio_bell = false;
-    };
-  };
-
   home.packages = with pkgs; [
     spotify
     discord

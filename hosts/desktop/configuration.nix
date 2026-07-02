@@ -185,7 +185,6 @@
     # apps
     btop # process monitor
     oxker # docker TUI
-    kitty # terminal emulator
     ghostty # terminal emulator
     github-cli
 
