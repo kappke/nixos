@@ -1,6 +1,12 @@
 { config, pkgs, ... }:
 
-{
+let
+  userScripts = pkgs.runCommand "user-scripts" { } ''
+    mkdir -p $out
+    cp -r ${../scripts}/. $out/
+    find $out -type f -exec chmod +x {} +
+  '';
+in {
   home.username = "kappke";
   home.homeDirectory = "/home/kappke";
 
@@ -44,6 +50,11 @@
     fastfetch
     speedtest-cli
   ];
+
+  home.file.".local/bin" = {
+    source = "${userScripts}";
+    recursive = true;
+  };
 
   home.sessionVariables = {
     EDITOR = "nvim";
