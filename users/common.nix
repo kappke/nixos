@@ -3,7 +3,11 @@
 let
   userScripts = pkgs.runCommand "user-scripts" { } ''
     mkdir -p $out
-    cp -r ${../scripts}/. $out/
+    for f in ${../scripts}/*; do
+      [ -f "$f" ] || continue
+      name="$(basename "$f")"
+      cp "$f" "$out/''${name%.*}"
+    done
     find $out -type f -exec chmod +x {} +
   '';
 in {
