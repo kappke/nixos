@@ -8,10 +8,9 @@
     syntaxHighlighting.enable = true;
     
     shellAliases = {
-      ls = "eza --color=always --icons";
+      ls = "eza --color=always --icons=always";
       cat = "bat --color=always";
       cd = "z";
-      la = "lazy-click";
       ghostty = "GTK_IM_MODULE=simple ghostty";
     };
     
