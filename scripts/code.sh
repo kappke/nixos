@@ -27,11 +27,12 @@ DISCOVER_PRUNE=(
     vendor .venv venv __pycache__ .pytest_cache .mypy_cache .tox
     .idea .vscode .direnv .terraform
     src internal cmd pkg api test tests docs examples scripts bin
+    archive # personal preference: don't want to see old archived projects
 )
 
 WINDOW_ORDER=(terminal code ai git http)
 declare -A WINDOW_CMD=(
-    [code]='nvim .'
+    [code]='nvim'
     [ai]='opencode'
     [git]='lazygit'
     [http]='posting -c requests'
