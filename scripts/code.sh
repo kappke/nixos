@@ -86,6 +86,13 @@ is_valid_project() {
 # ---------------------------------------------------------------------------
 setup_completion() {
     if [ -n "$ZSH_VERSION" ]; then
+        # Substring matches (e.g. `vi` -> nvim, viject) share no common
+        # prefix, so zsh's default unambiguous-prefix insertion shows nothing
+        # on the first Tab. `menu select` drops straight into a selectable,
+        # cyclable list instead of waiting for a second Tab.
+        zstyle ':completion:*:*:code:*'    menu select
+        zstyle ':completion:*:*:code.sh:*' menu select
+
         _code_completions() {
             local cur="${words[CURRENT]}" name
             local -a matches
