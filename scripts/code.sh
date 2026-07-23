@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # code.sh — jump into (or create) a tmux project session with a standard
-# set of windows: terminal, code, ai, git, http.
+# set of windows: terminal, code, ai.
 #
 # Usage:
-#   code.sh <project-name>
+#   code.sh [-t|--terminal-only] [project-name]
 #
 # Layout:
 #   ~/projects/<...>/<project>/   any depth; a folder is a project iff it
@@ -30,16 +30,49 @@ DISCOVER_PRUNE=(
     archive # personal preference: don't want to see old archived projects
 )
 
-WINDOW_ORDER=(terminal code ai git http)
+WINDOW_ORDER=(
+    terminal code ai
+    # git
+    # http
+)
 declare -A WINDOW_CMD=(
     [code]='nvim'
     [ai]='opencode'
-    [git]='lazygit'
-    [http]='posting -c requests'
+    # [git]='lazygit'
+    # [http]='posting -c requests'
 )
 
 declare -A PROJECT_PATHS
 VALID_PROJECTS=()
+
+parse_args() {
+    TERMINAL_ONLY=0
+    TARGET_PROJECT=""
+
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -t|--terminal-only)
+                TERMINAL_ONLY=1
+                ;;
+            -*)
+                echo "Usage: code.sh [-t|--terminal-only] [project-name]" >&2
+                exit 2
+                ;;
+            *)
+                if [ -n "$TARGET_PROJECT" ]; then
+                    echo "Usage: code.sh [-t|--terminal-only] [project-name]" >&2
+                    exit 2
+                fi
+                TARGET_PROJECT="$1"
+                ;;
+        esac
+        shift
+    done
+
+    if [ "$TERMINAL_ONLY" -eq 1 ]; then
+        WINDOW_ORDER=(terminal)
+    fi
+}
 
 # ---------------------------------------------------------------------------
 # Discovery: populate VALID_PROJECTS / PROJECT_PATHS from BASE_DIR
@@ -249,9 +282,9 @@ attach_or_switch() {
 # Main
 # ---------------------------------------------------------------------------
 main() {
+    parse_args "$@"
     discover_projects
 
-    TARGET_PROJECT="$1"
     resolve_project "$TARGET_PROJECT"
 
     if [ -z "$PROJECT_DIR" ]; then
@@ -259,11 +292,10 @@ main() {
     fi
 
     ensure_session
-    ensure_requests_dir
+    # ensure_requests_dir
     create_missing_windows
     reorder_windows
     attach_or_switch
 }
 
 main "$@"
-
