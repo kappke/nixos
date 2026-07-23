@@ -146,7 +146,6 @@ in
   console.keyMap = "br-abnt2";
 
   security.polkit.enable = true;
-  programs.light.enable = true;
   programs.zsh.enable = true;
   programs.steam.enable = true;
 
@@ -168,6 +167,7 @@ in
 
   virtualisation.docker = {
     enable = true;
+    daemon.settings.live-restore = false;
   };
 
   # Allow unfree packages
@@ -195,6 +195,7 @@ in
     oxker # docker TUI
     ghostty # terminal emulator
     github-cli
+    brightnessctl # backlight control (replaces light)
   ];
 
   fonts.packages = with pkgs; [

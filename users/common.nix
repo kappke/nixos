@@ -47,9 +47,11 @@ in {
   home.packages = with pkgs; [
     wget
     zip
+    nvd
     unzip
     tree
     btop
+    openssl
     ethtool
     fastfetch
     speedtest-cli

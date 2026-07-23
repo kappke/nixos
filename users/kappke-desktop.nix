@@ -36,6 +36,10 @@
     tableplus
     redisinsight
     (mongodb-compass.overrideAttrs (oldAttrs: {
+      buildCommand = builtins.replaceStrings
+        [ "wrapGAppsHook $out/bin/mongodb-compass" ]
+        [ ":" ]
+        oldAttrs.buildCommand;
       installPhase = oldAttrs.installPhase + ''
         wrapProgram $out/bin/mongodb-compass \
           --add-flags "--password-store=gnome-libsecret --ignore-additional-command-line-flags"
