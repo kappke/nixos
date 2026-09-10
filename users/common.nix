@@ -54,6 +54,7 @@ in {
     openssl
     ethtool
     fastfetch
+    thunderbird
     speedtest-cli
   ];
 
