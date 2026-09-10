@@ -99,6 +99,7 @@
         "XF86AudioPrev" = "exec playerctl prev";
       };
     };
+  };
 
   home.packages = with pkgs; [
     grim
