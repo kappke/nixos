@@ -58,11 +58,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1787313964,
-        "narHash": "sha256-XyFjh0xcGbryTm6ZfoJLxCnoDxHilyeQBq7qGASRDv0=",
+        "lastModified": 1789534455,
+        "narHash": "sha256-OpHFTdnbdgyr2liHdpxMJJuHM9tUiCjLMNiYaSLXRtg=",
         "owner": "LKTeloeken",
         "repo": "octapus_db",
-        "rev": "23827ccab5b0ad71db0c302adc8510ca355d1e58",
+        "rev": "677bc12df0f1249f26a85456437f74a0fd7a1877",
         "type": "github"
       },
       "original": {

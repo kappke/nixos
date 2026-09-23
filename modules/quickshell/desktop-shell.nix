@@ -4,6 +4,9 @@ let
   giphySearch = pkgs.writeScriptBin "giphy-search" (
     "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ./giphy-search.py
   );
+  chatgptUsage = pkgs.writeScriptBin "chatgpt-usage" (
+    "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ./chatgpt-usage.py
+  );
   restoreWallpaper = pkgs.writeShellScript "restore-desktop-wallpaper" ''
     stateFile="${config.home.homeDirectory}/.config/quickshell/wallpaper-state"
     defaultWallpaper="${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-6llkol.png"
@@ -30,6 +33,7 @@ in
     pkgs.awww
     pkgs.wl-clipboard
     giphySearch
+    chatgptUsage
   ];
 
   home.file.".config/quickshell/desktop-shell".source = ./desktop-shell;

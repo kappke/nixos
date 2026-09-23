@@ -6,7 +6,7 @@
 
 - `bar/`: panel-only widgets and tooltips.
 - `components/`: reusable visual primitives and the shared `Theme` singleton.
-- `features/`: self-contained popup and row implementations grouped by user-facing feature.
+- `features/`: self-contained popup, dock, and row implementations grouped by user-facing feature.
 - `services/`: process-backed data providers with no presentation responsibilities.
 
 Feature files import shared controls explicitly with `import "../../components" as UI`. This keeps cross-directory dependencies visible. Types in the same feature directory may refer to each other directly.

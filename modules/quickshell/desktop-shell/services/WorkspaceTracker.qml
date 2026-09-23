@@ -14,13 +14,15 @@ Item {
             const tree = JSON.parse(output);
             const next = ({});
 
-            function walk(node, workspaceName) {
+            function walk(node, workspaceName, outputName) {
                 if (!node)
                     return;
 
                 let currentWorkspace = workspaceName;
+                let currentOutput = outputName;
                 if (node.type === "workspace") {
                     currentWorkspace = node.name || workspaceName;
+                    currentOutput = node.output || outputName;
                     if (currentWorkspace && !next[currentWorkspace])
                         next[currentWorkspace] = [];
                 }
@@ -41,14 +43,23 @@ Item {
                         }
                     }
                     if (!duplicate)
-                        existing.push({ key: key, appId: appId, className: className, title: node.name || "" });
+                        existing.push({
+                            key: key,
+                            id: node.id || 0,
+                            appId: appId,
+                            className: className,
+                            title: node.name || "",
+                            workspaceName: currentWorkspace,
+                            output: currentOutput || "",
+                            focused: !!node.focused
+                        });
                 }
 
                 for (let i = 0; i < nodes.length; ++i)
-                    walk(nodes[i], currentWorkspace);
+                    walk(nodes[i], currentWorkspace, currentOutput);
             }
 
-            walk(tree, "");
+            walk(tree, "", "");
             root.applications = next;
         } catch (error) {
             // Sway may return a partial tree while reloading; keep the last valid model.

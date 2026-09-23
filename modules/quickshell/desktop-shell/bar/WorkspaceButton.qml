@@ -1,7 +1,5 @@
 import QtQuick
-import Quickshell
 import Quickshell.Io
-import Quickshell.Widgets
 import "../components" as UI
 
 Item {
@@ -58,34 +56,9 @@ Item {
                 width: 16
                 height: 16
 
-                function iconSource() {
-                    const appId = modelData && modelData.appId ? modelData.appId : "";
-                    const className = modelData && modelData.className ? modelData.className : "";
-                    const appIdLower = appId.toLowerCase();
-                    const classNameLower = className.toLowerCase();
-                    function themed(name) {
-                        return name && Quickshell.hasThemeIcon(name) ? Quickshell.iconPath(name) : "";
-                    }
-                    return themed(appId)
-                        || themed(appIdLower)
-                        || themed(className)
-                        || themed(classNameLower)
-                        || "";
-                }
-
-                IconImage {
+                UI.ApplicationIcon {
                     anchors.fill: parent
-                    asynchronous: true
-                    source: parent.iconSource()
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    visible: parent.children[0].source.length === 0
-                    text: modelData && (modelData.appId || modelData.className) ? (modelData.appId || modelData.className).substring(0, 1).toUpperCase() : "?"
-                    color: UI.Theme.mutedText
-                    font.pixelSize: 9
-                    font.bold: true
+                    application: modelData
                 }
             }
         }

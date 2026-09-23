@@ -16,6 +16,7 @@ import "components" as UI
 import "features/audio" as Audio
 import "features/bluetooth" as BluetoothFeature
 import "features/calendar" as Calendar
+import "features/dock" as DockFeature
 import "features/giphy" as Giphy
 import "features/media" as Media
 import "features/network" as Network
@@ -100,6 +101,10 @@ ShellRoot {
 
     Services.WeatherService {
         id: weatherService
+    }
+
+    Services.ChatGPTUsageService {
+        id: chatgptUsageService
     }
 
     Services.MediaController {
@@ -317,6 +322,12 @@ ShellRoot {
                     onClicked: panel.togglePopup("wifi")
                 }
 
+                Bar.ChatGPTUsageWidget {
+                    id: chatgptUsageWidget
+
+                    service: chatgptUsageService
+                }
+
                 Item {
                     id: batteryItem
 
@@ -392,6 +403,12 @@ ShellRoot {
                 targetItem: clockItem
                 clock: systemClock
                 open: clockMouseArea.containsMouse && panel.activePopup === "" && panel.pendingPopup === ""
+            }
+
+            Bar.ChatGPTUsageTooltip {
+                targetItem: chatgptUsageWidget
+                service: chatgptUsageService
+                open: chatgptUsageWidget.hovered && panel.activePopup === "" && panel.pendingPopup === ""
             }
 
             Audio.AudioPopup {
@@ -491,6 +508,18 @@ ShellRoot {
                 open: panel.activePopup === "bluetooth"
                 onCloseRequested: panel.closePopup()
             }
+        }
+    }
+
+    Variants {
+        model: Quickshell.screens
+
+        DockFeature.Dock {
+            property var modelData
+
+            screen: modelData
+            outputName: modelData ? modelData.name : ""
+            applications: workspaceTracker.applications
         }
     }
 }
