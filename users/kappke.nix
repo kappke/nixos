@@ -8,6 +8,7 @@
     ../modules/thunar/thunar.nix
     ../modules/zen-browser/zen-browser.nix
     ../modules/octapus-db/octapus-db.nix
+    ../modules/distrobox/distrobox.nix
   ];
 
   programs.ghostty = {

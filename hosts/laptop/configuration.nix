@@ -88,7 +88,7 @@ in
   networking.hostName = "kappke"; # Define your hostname.
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.powersave = false; 
-  networking.firewall.trustedInterfaces = [ "docker0" ];
+  networking.firewall.trustedInterfaces = [ "docker0" "tailscale0" ];
   networking.firewall.allowedTCPPorts = [ 8080 ];
 
   boot.extraModprobeConfig = ''
@@ -120,6 +120,17 @@ in
       default = [ "wlr" "gtk" ];
       "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
+  };
+
+  services.openssh = {
+    enable = true;
+    permitRootLogin = "no";
+
+    openFirewall = false;
+    listenAddresses = [
+      { addr = "100.82.103.115"; port = 22; }
+      { addr = "10.0.0.9"; port = 22; }
+    ];
   };
 
   services.tailscale = {
@@ -184,6 +195,7 @@ in
     enable = true;
     daemon.settings.live-restore = false;
   };
+  virtualisation.podman.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

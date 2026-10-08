@@ -9,6 +9,7 @@
     ../modules/zen-browser/zen-browser.nix
     ../modules/octapus-db/octapus-db.nix
     ../modules/nvim/nvim.nix
+    ../modules/distrobox/distrobox.nix
   ];
 
   # Use the NVIDIA-compatible wrapper installed by the NixOS Sway module.

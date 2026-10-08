@@ -15,7 +15,8 @@
     };
 
     octapus-db = {
-      url = "github:LKTeloeken/octapus_db";
+      url = "github:LKTeloeken/octapus_db/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
   };
