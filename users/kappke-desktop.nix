@@ -31,7 +31,7 @@
 
   home.packages = with pkgs; [
     vicinae
-    spotify
+    inputs.spotifast.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord
     ani-cli
     prismlauncher

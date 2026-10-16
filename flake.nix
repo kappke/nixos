@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    spotifast = {
+      url = "github:crmne/spotifast";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     octapus-db = {
       url = "github:LKTeloeken/octapus_db/nix";
       inputs.nixpkgs.follows = "nixpkgs";

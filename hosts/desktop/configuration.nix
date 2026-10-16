@@ -231,6 +231,7 @@
     roboto-slab
     roboto-mono
     roboto-serif
+    ipaexfont
     fira-code
     fira-code-symbols
     # nerdfonts

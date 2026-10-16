@@ -179,12 +179,13 @@ in
   users.users.kappke = {
     isNormalUser = true;
     description = "Vinícius Kappke";
-    extraGroups = [ "networkmanager" "wheel" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [];
   };
 
   home-manager = {
+    backupFileExtension = "hm-backup";
     extraSpecialArgs = { inherit inputs; };
     users = {
       "kappke" = import ../../users/kappke.nix;
@@ -231,6 +232,7 @@ in
     roboto-slab
     roboto-mono
     roboto-serif
+    ipaexfont
     fira-code
     fira-code-symbols
     nerd-fonts.symbols-only

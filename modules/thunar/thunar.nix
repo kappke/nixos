@@ -36,7 +36,9 @@
   # XDG MIME associations (force overwrite)
   xdg.mimeApps = {
     enable = true;
-    
+
+    associations.added."x-scheme-handler/claude" = [ "com.anthropic.Claude.desktop" ];
+
     defaultApplications = {
       "inode/directory" = "thunar.desktop";
       
@@ -65,8 +67,12 @@
       
       # Text
       "text/plain" = "nvim.desktop";
+
+      "x-scheme-handler/claude" = "com.anthropic.Claude.desktop";
     };
   };
+
+  xdg.configFile."mimeapps.list".force = true;
 
   # Enable Thunar as default file manager
   xdg.configFile."xfce4/helpers.rc".text = ''

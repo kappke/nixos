@@ -23,7 +23,7 @@
 
   home.packages = with pkgs; [
     vicinae
-    spotify
+    inputs.spotifast.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord
     ani-cli
     prismlauncher
@@ -80,7 +80,7 @@
         { command = "vicinae server"; }
         { command = "zen"; }
         { command = "slack"; }
-        { command = "spotify"; }
+        { command = "spotifast"; }
       ];
 
       workspaceOutputAssign = [
@@ -95,7 +95,7 @@
       assigns = {
         "1" =  [{ app_id = "^Zen$"; }];
         "4" =  [{ app_id = "^Slack$"; }];
-        "5" =  [{ class = "^Spotify$"; }];
+        "5" =  [{ app_id = "^spotifast$"; }];
       };
     };
 

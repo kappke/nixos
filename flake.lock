@@ -44,11 +44,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1790740365,
-        "narHash": "sha256-iyzwlZ2Cltkv2Uov1ddl/uInu5gRdOJKQAJRcsO+yf8=",
+        "lastModified": 1792093277,
+        "narHash": "sha256-Y1tE9FYTeqgO3Ga8mHWvbL7LfjdvawEBD6b3NyHlP90=",
         "owner": "LKTeloeken",
         "repo": "octapus_db",
-        "rev": "5269f459ab2df9f4d14c9dcde101332aef3656b3",
+        "rev": "521d3efae5ec6f8694b303e936f65106b27bd64d",
         "type": "github"
       },
       "original": {
@@ -63,7 +63,50 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "octapus-db": "octapus-db",
+        "spotifast": "spotifast",
         "zen-browser": "zen-browser"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "spotifast",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787834454,
+        "narHash": "sha256-jXSvqn04IOecJCvSvl8+g3PsbDVNP6qKs6dKUs/b16k=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "dc2fd1acc537f3583744e1373597a5731ff7a6e3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "spotifast": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1791996872,
+        "narHash": "sha256-5EHjjfLpMwTKgcDQeKQ9q7jQsDO9FkZrr65j2QolrLg=",
+        "owner": "crmne",
+        "repo": "spotifast",
+        "rev": "6a60c305e6fe1e571f0e7aef184396e0c54c026d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "crmne",
+        "repo": "spotifast",
+        "type": "github"
       }
     },
     "systems": {
