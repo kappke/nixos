@@ -5,6 +5,7 @@
     ripgrep
     tree-sitter
     prettierd
+    typescript # 7.x ships the native Go tsc, used as LSP via `tsc --lsp`
     black
     lua
     python3
