@@ -1,6 +1,45 @@
 { config, pkgs, lib, ... }:
 
+let
+  flameshot = pkgs.flameshot.overrideAttrs (oldAttrs: {
+    postPatch = (oldAttrs.postPatch or "") + ''
+      substituteInPlace src/utils/screengrabber.cpp \
+        --replace-fail '#include <QApplication>' '#include <QApplication>
+      #include <QJsonArray>
+      #include <QJsonDocument>
+      #include <QJsonObject>' \
+        --replace-fail '    // Capture Active Monitor: auto-select monitor under cursor' '    // Ask Sway before opening any UI, while the original output is focused.
+          if (m_info.waylandDetected() && qEnvironmentVariableIsSet("SWAYSOCK")) {
+              QProcess sway;
+              sway.start("${pkgs.sway}/bin/swaymsg", { "-t", "get_outputs", "-r" });
+              if (sway.waitForFinished(3000) && sway.exitCode() == 0) {
+                  const auto outputs = QJsonDocument::fromJson(sway.readAllStandardOutput()).array();
+                  for (const auto& output : outputs) {
+                      const auto object = output.toObject();
+                      if (!object.value("focused").toBool()) {
+                          continue;
+                      }
+                      for (int i = 0; i < screens.size(); ++i) {
+                          if (screens[i]->name() == object.value("name").toString()) {
+                              m_selectedMonitor = i;
+                              return cropToMonitor(fullScreenshot, i);
+                          }
+                      }
+                  }
+              }
+          }
+
+          // Capture Active Monitor: auto-select monitor under cursor' \
+        --replace-fail 'int minX = 0, minY = 0;' 'int minX = screens.first()->geometry().x(), minY = screens.first()->geometry().y();'
+    '';
+  });
+in
 {
+  services.flameshot = {
+    enable = true;
+    package = flameshot;
+  };
+
   home.file.".XCompose".text = ''
     include "%L"
     <dead_acute> <C> : "Ç" Ccedilla
@@ -54,6 +93,12 @@
       };
 
       floating.border = 1;
+      window.commands = [
+        {
+          criteria.app_id = "^(org\\.flameshot\\.Flameshot|flameshot)$";
+          command = "floating enable, border none, fullscreen enable";
+        }
+      ];
       # gaps.inner = 8;
 
       bars = [];
@@ -84,7 +129,7 @@
         # set custom bindings
         "${mod}+d" = "exec vicinae toggle"; # toggle launcher
         "${mod}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}"; # open terminal
-        "${mod}+Shift+s" = "exec grim -g \"$(slurp)\" - | wl-copy"; # screenshot
+        "${mod}+Shift+s" = "exec ${flameshot}/bin/flameshot gui"; # screenshot
         "Mod1+Shift+q" = "kill"; # kill focused app
         "Mod1+l" = "exec qs ipc call session lock"; # lock screen
 
