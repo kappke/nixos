@@ -45,7 +45,7 @@
     opencode
     gemini-cli
     tableplus
-    redisinsight
+    # redisinsight # electron 41 is EOL/insecure
     (mongodb-compass.overrideAttrs (oldAttrs: {
       buildCommand = builtins.replaceStrings
         [ "wrapGAppsHook $out/bin/mongodb-compass" ]
