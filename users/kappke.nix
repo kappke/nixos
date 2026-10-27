@@ -38,6 +38,8 @@
     posting
     lazygit
     opencode
+    claude-code
+    codex
     tableplus
     lazydocker
     # redisinsight
