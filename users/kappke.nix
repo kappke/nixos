@@ -26,6 +26,7 @@
     inputs.spotifast.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord
     ani-cli
+    feedr
     prismlauncher
     ngrok
     live-server
