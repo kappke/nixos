@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-dokploy = {
+      url = "github:el-kurto/nix-dokploy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {
@@ -37,6 +42,7 @@
     nixosConfigurations.server = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
+        inputs.nix-dokploy.nixosModules.default
         ./hosts/server/configuration.nix
       ];
     };

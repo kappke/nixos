@@ -39,6 +39,7 @@
     openFirewall = true;
     mutableSettings = false;
     settings = {
+      http.address = "0.0.0.0:3001"; # 3000 is taken by the Dokploy panel
       dns = {
         upstream_dns = [
           "https://dns10.quad9.net/dns-query"
@@ -58,8 +59,8 @@
         rewrites = [
           {
             enabled = true;
-            domain = "*.server";
-            answer = "192.168.100.73";
+            domain = "*.home.kappke.dev";
+            answer = "100.103.105.88";
           }
         ];
       };
@@ -74,123 +75,56 @@
     };
   };
 
-  services.homepage-dashboard = {
+  # Docker + Dokploy (swarm). Traefik (80/443) replaces the old nginx.
+  virtualisation.docker = {
     enable = true;
-    openFirewall = true; # Opens port 8082 by default
-    # allowedHosts = "server,server.walrus-ruffe.ts.net,192.168.100.17,localhost";
-    allowedHosts = "*";
-    
-    # These settings define the layout dashboard
-    services = [
-      {
-        "Infrastructure" = [
-          {
-            "AdGuard Home" = {
-              icon = "adguard-home.png";
-              href = "http://server:3000"; # Access via MagicDNS
-              description = "Network-wide Adblocking";
-              widget = {
-                type = "adguard";
-                url = "http://localhost:3000";
-                username = "admin"; 
-                password = "admin"; 
-              };
-            };
-          }
-        ];
-      }
-      {
-        "Network" = [
-          {
-            "Tailscale" = {
-              icon = "tailscale.png";
-              href = "https://login.tailscale.com/admin/machines";
-              description = "Mesh VPN Status";
-            };
-          }
-        ];
-      }
-      {
-        "Storage" = [
-          {
-            "FileBrowser" = {
-              icon = "filebrowser.png";
-              href = "http://server:8080"; # Replace with your Tailscale IP
-              description = "Family Photos & Documents";
-              widget = {
-                type = "filebrowser";
-                url = "http://127.0.0.1:8080"; # Use localhost since it's on the same machine
-                key = "";  # FileBrowser uses the password as the 'key'
-              };
-            };
-          }
-        ];
-      }
-    ];
+    daemon.settings.live-restore = false; # required for swarm
+  };
 
-    widgets = [
-      {
-        resources = {
-          cpu = true;
-          memory = true;
-          disk = "/";
-        };
-      }
-      {
-        datetime = {
-          format = {
-            timeStyle = "short";
-            dateStyle = "short";
-          };
-        };
-      }
+  services.dokploy = {
+    enable = true;
+    # Image: stable tag pinned by the module (override with `image` if needed)
+    database.passwordFile = "/var/lib/secrets/dokploy-db-password";
+    auth.secretFile = "/var/lib/secrets/dokploy-auth-secret";
+    encryption.keyFile = "/var/lib/secrets/dokploy-encryption-key";
+    # Single node: recreate the swarm if the LAN IP changes (DHCP)
+    swarm.autoRecreate = true;
+    # Cloudflare token for Traefik DNS-01 (root-only env file, not in the store):
+    #   CF_DNS_API_TOKEN=...
+    traefik.extraArgs = [ "--env-file=/var/lib/secrets/traefik-cloudflare.env" ]; # one token per item (each is shell-escaped)
+    # Panel is served by Traefik (dokploy.home.kappke.dev); close direct access.
+    port = null;
+  };
+
+  # Panel domain, declared here because the UI's "Server Domain" form fails with
+  # nix-dokploy: the swarm service is `dokploy_dokploy`, the UI looks for `dokploy`.
+  services.dokploy.traefik.dynamicConfig."dokploy-panel" = {
+    http.routers.dokploy-panel = {
+      rule = "Host(`dokploy.home.kappke.dev`)";
+      entryPoints = [ "websecure" ];
+      service = "dokploy-panel";
+      tls.certResolver = "letsencrypt";
+    };
+    http.services.dokploy-panel.loadBalancer.servers = [
+      { url = "http://dokploy:3000"; }
     ];
   };
 
-  services.filebrowser = {
-    enable = true;
-    settings = {
-      port = 8080;
-      address = "0.0.0.0"; # Listen on all interfaces so Tailscale can reach it
-      root = "/mnt/family-files";
+  # AdGuard UI (native service on the host) behind Traefik.
+  services.dokploy.traefik.dynamicConfig."adguard" = {
+    http.routers.adguard = {
+      rule = "Host(`adguard.home.kappke.dev`)";
+      entryPoints = [ "websecure" ];
+      service = "adguard";
+      tls.certResolver = "letsencrypt";
     };
+    http.services.adguard.loadBalancer.servers = [
+      { url = "http://100.103.105.88:3001"; } # host's Tailscale IP, reachable from the Traefik container
+    ];
   };
 
-  # Ensure the service can read the mount point
-  systemd.services.filebrowser.serviceConfig.ProtectHome = "read-only";
-
-  services.nginx = {
-    enable = true;
-    recommendedProxySettings = true;
-    
-    # add subdomain rewrites for the adguard, homepage and filebrowser services like adguard.server, homepage.server and filebrowser.server
-    virtualHosts = {
-      "adguard.server" = {
-        root = "/var/www/adguard";
-        locations = {
-          "/" = {
-            proxyPass = "http://localhost:3000";
-          };
-        };
-      };
-      "homepage.server" = {
-        root = "/var/www/homepage";
-        locations = {
-          "/" = {
-            proxyPass = "http://localhost:8082";
-          };
-        };
-      };
-      "filebrowser.server" = {
-        root = "/var/www/filebrowser";
-        locations = {
-          "/" = {
-            proxyPass = "http://localhost:8080";
-          };
-        };
-      };
-    };
-  };
+  # Traefik needs 80/443 (Docker bypasses this firewall, kept for documentation)
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # Keep it running when lid is closed
   services.logind.settings.Login.HandleLidSwitch = "ignore";
