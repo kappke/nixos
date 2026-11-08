@@ -35,6 +35,7 @@ in
 
   environment.etc."greetd/environments".text = ''
     sway
+    start-hyprland
     bash
   '';
 
@@ -102,6 +103,8 @@ in
   };
 
   services.power-profiles-daemon.enable = true;
+  programs.hyprland.enable = true;
+
   services.upower.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
@@ -119,6 +122,7 @@ in
       default = [ "wlr" "gtk" ];
       "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
+    config.hyprland."org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
   };
 
   services.openssh = {

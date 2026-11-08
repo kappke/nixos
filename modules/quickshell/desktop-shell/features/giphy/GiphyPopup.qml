@@ -24,6 +24,7 @@ PanelWindow {
         right: true
         bottom: true
     }
+    WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: root.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     function copyUrl(url) {

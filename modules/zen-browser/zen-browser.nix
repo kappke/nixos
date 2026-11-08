@@ -13,6 +13,15 @@ let
 in
 {
   home.packages = [
-    (zenPackages.default.override { zen-browser-unwrapped = zenBrowserUnwrapped; })
+    (zenPackages.default.override {
+      zen-browser-unwrapped = zenBrowserUnwrapped;
+      # Middle click scrolls instead of pasting the primary selection.
+      wrapFirefox = unwrapped: args: pkgs.wrapFirefox unwrapped (args // {
+        extraPrefs = ''
+          pref("general.autoScroll", true);
+          pref("middlemouse.paste", false);
+        '';
+      });
+    })
   ];
 }

@@ -16,6 +16,7 @@ import "components" as UI
 import "features/audio" as Audio
 import "features/bluetooth" as BluetoothFeature
 import "features/calendar" as Calendar
+import "features/display" as Display
 import "features/dock" as DockFeature
 import "features/giphy" as Giphy
 import "features/media" as Media
@@ -42,6 +43,9 @@ ShellRoot {
     ]
 
     function workspaceByName(name) {
+        if (workspaceTracker.isHyprland)
+            return workspaceTracker.hyprlandWorkspace(name);
+
         const workspaces = I3.workspaces.values;
         for (let i = 0; i < workspaces.length; ++i) {
             if (workspaces[i].name === name)
@@ -97,6 +101,10 @@ ShellRoot {
 
     Services.WorkspaceTracker {
         id: workspaceTracker
+    }
+
+    Services.DisplayService {
+        id: displayService
     }
 
     Services.WeatherService {
@@ -229,6 +237,15 @@ ShellRoot {
                     icon: "\uf008"
                     active: panel.activePopup === "wallpaper"
                     onClicked: panel.togglePopup("wallpaper")
+                }
+
+                UI.IconButton {
+                    id: displayButton
+
+                    visible: workspaceTracker.isHyprland
+                    icon: "\uf108"
+                    active: panel.activePopup === "display"
+                    onClicked: panel.togglePopup("display")
                 }
 
                 UI.IconButton {
@@ -455,6 +472,13 @@ ShellRoot {
             Wallpaper.WallpaperPopup {
                 targetItem: wallpaperButton
                 open: panel.activePopup === "wallpaper"
+                onCloseRequested: panel.closePopup()
+            }
+
+            Display.DisplayPopup {
+                targetItem: displayButton
+                service: displayService
+                open: panel.activePopup === "display"
                 onCloseRequested: panel.closePopup()
             }
 

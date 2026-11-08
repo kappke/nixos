@@ -37,7 +37,7 @@ WINDOW_ORDER=(
 )
 declare -A WINDOW_CMD=(
     [code]='nvim'
-    [ai]='opencode'
+    [ai]='claude'
     # [git]='lazygit'
     # [http]='posting -c requests'
 )

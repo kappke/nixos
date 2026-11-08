@@ -64,7 +64,9 @@ PanelWindow {
         if (!application)
             return;
 
-        if (application.id)
+        if (application.address)
+            Quickshell.execDetached(["hyprctl", "dispatch", "hl.dsp.focus({ window = \"address:" + application.address + "\" })"]);
+        else if (application.id)
             Quickshell.execDetached(["swaymsg", "[con_id=" + application.id + "] focus"]);
         else if (application.workspaceName)
             Quickshell.execDetached(["swaymsg", "workspace", "number", application.workspaceName]);

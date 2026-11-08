@@ -4,6 +4,7 @@
   imports = [
     ./common.nix
     ../modules/sway/sway.nix
+    ../modules/hyprland/hyprland.nix
     ../modules/quickshell/desktop-shell.nix
     ../modules/thunar/thunar.nix
     ../modules/zen-browser/zen-browser.nix
@@ -32,13 +33,13 @@
     live-server
     mosh
     tokei
+    zenity
 
     # work related 
     bruno
     # rustdesk
     posting
     lazygit
-    opencode
     claude-code
     codex
     tableplus
@@ -114,6 +115,37 @@
       bindsym $mod+Shift+e move container to workspace number 6
     '';
   };
+
+  # Monitors are handled by kanshi, same as under Sway. Hyprland does not export the session
+  # environment to systemd, so kanshi.service dies with "failed to connect to display" until
+  # WAYLAND_DISPLAY is imported and the start-limit it already burned through is cleared.
+  hyprland.extraConfig = ''
+    hl.on("hyprland.start", function()
+        hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XDG_SESSION_TYPE && systemctl --user reset-failed kanshi; systemctl --user restart kanshi")
+    end)
+
+    for _, rule in ipairs({
+        { "1", "HDMI-A-1" }, { "2", "HDMI-A-1" }, { "3", "HDMI-A-1" },
+        { "4", "eDP-1" }, { "5", "eDP-1" }, { "6", "eDP-1" },
+    }) do
+        hl.workspace_rule({ workspace = rule[1], monitor = rule[2] })
+    end
+
+    hl.window_rule({ match = { class = "^[Zz]en" }, workspace = "1 silent" })
+    hl.window_rule({ match = { class = "^Slack$" }, workspace = "4 silent" })
+    hl.window_rule({ match = { class = "^spotifast$" }, workspace = "5 silent" })
+
+    hl.on("hyprland.start", function()
+        hl.exec_cmd("zen")
+        hl.exec_cmd("slack")
+        hl.exec_cmd("spotifast")
+    end)
+
+    for key, workspace in pairs({ Q = 4, W = 5, E = 6 }) do
+        hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = workspace }))
+        hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = workspace }))
+    end
+  '';
 
   services.kanshi = {
     enable = true;

@@ -35,7 +35,7 @@ PopupWindow {
         if (!path)
             return;
         root.selectedPath = path;
-        Quickshell.execDetached(["awww", "img", "--transition-type", "fade", path]);
+        Quickshell.execDetached(["set-wallpaper", path, "--transition-type", "fade"]);
         Quickshell.execDetached(["sh", "-c", "printf '%s\\n' \"$1\" > \"$2\"", "wallpaper-state", path, root.wallpaperStateFile]);
     }
 
@@ -63,7 +63,7 @@ PopupWindow {
                     const path = lines[i].trim();
                     if (path.length === 0)
                         continue;
-                    if (/\.(png|jpe?g|webp|gif)$/i.test(path))
+                    if (/\.(png|jpe?g|webp|gif|mp4|mkv|webm|mov)$/i.test(path))
                         result.push(path);
                 }
                 result.sort();

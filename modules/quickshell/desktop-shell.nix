@@ -7,6 +7,21 @@ let
   chatgptUsage = pkgs.writeScriptBin "chatgpt-usage" (
     "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ./chatgpt-usage.py
   );
+  # Images go through awww; videos are played by mpvpaper on top of it.
+  setWallpaper = pkgs.writeShellScriptBin "set-wallpaper" ''
+    wallpaper="$1"
+    shift
+    ${pkgs.procps}/bin/pkill -x mpvpaper || true
+
+    case "''${wallpaper,,}" in
+      *.mp4|*.mkv|*.webm|*.mov)
+        exec ${pkgs.mpvpaper}/bin/mpvpaper -o "no-audio loop hwdec=auto panscan=1.0" ALL "$wallpaper"
+        ;;
+      *)
+        exec ${pkgs.awww}/bin/awww img "$@" "$wallpaper"
+        ;;
+    esac
+  '';
   restoreWallpaper = pkgs.writeShellScript "restore-desktop-wallpaper" ''
     stateFile="${config.home.homeDirectory}/.config/quickshell/wallpaper-state"
     defaultWallpaper="${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-6llkol.png"
@@ -14,11 +29,11 @@ let
     if [ -r "$stateFile" ]; then
       IFS= read -r wallpaper < "$stateFile"
       if [ -f "$wallpaper" ]; then
-        exec "${pkgs.awww}/bin/awww" img "$wallpaper"
+        exec "${setWallpaper}/bin/set-wallpaper" "$wallpaper"
       fi
     fi
 
-    exec "${pkgs.awww}/bin/awww" img "$defaultWallpaper"
+    exec "${setWallpaper}/bin/set-wallpaper" "$defaultWallpaper"
   '';
 in
 {
@@ -31,6 +46,8 @@ in
     pkgs.curl
     pkgs.gcalcli
     pkgs.awww
+    pkgs.mpvpaper
+    setWallpaper
     pkgs.wl-clipboard
     giphySearch
     chatgptUsage

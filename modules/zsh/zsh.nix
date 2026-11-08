@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   programs.zsh = {
@@ -9,9 +9,9 @@
     
     shellAliases = {
       ls = "eza --color=always --icons=always";
-      cat = "bat --color=always";
       cd = "z";
       ghostty = "GTK_IM_MODULE=simple ghostty";
+      claude-work = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude";
     };
     
     history.size = 10000;
@@ -49,4 +49,10 @@
   programs.bat = {
     enable = true;
   };
+
+  # second claude account: separate login, shares memory and skills with ~/.claude
+  home.file.".claude-work/projects".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/projects";
+  home.file.".claude-work/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/skills";
 }

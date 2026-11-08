@@ -4,6 +4,7 @@
   imports = [
     ./common.nix
     ../modules/sway/sway.nix
+    ../modules/hyprland/hyprland.nix
     ../modules/quickshell/desktop-shell.nix
     ../modules/thunar/thunar.nix
     ../modules/zen-browser/zen-browser.nix
@@ -18,6 +19,13 @@
     mode = "2560x1080@74.991Hz";
     adaptive_sync = "on";
   };
+
+  hyprland.extraConfig = ''
+    hl.monitor({ output = "DP-2", mode = "2560x1080@74.991", position = "0x0", scale = 1, vrr = 1 })
+    hl.env("LIBVA_DRIVER_NAME", "nvidia")
+    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    hl.env("NVD_BACKEND", "direct")
+  '';
 
   programs.ghostty = {
     enable = true;
@@ -38,11 +46,11 @@
     ngrok
     live-server
     mosh
+    zenity
 
     # work related
     bruno
     posting
-    opencode
     gemini-cli
     tableplus
     # redisinsight # electron 41 is EOL/insecure

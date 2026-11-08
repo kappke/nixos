@@ -88,6 +88,8 @@
     wrapperFeatures.gtk = true;
   };
 
+  programs.hyprland.enable = true;
+
   services.gvfs.enable = true;
   services.tumbler.enable = true;
   services.upower.enable = true;
@@ -105,6 +107,7 @@
       default = lib.mkForce [ "wlr" "gtk" ];
       "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
+    config.hyprland."org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
   };
 
   services.tailscale = {
